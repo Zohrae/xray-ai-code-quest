@@ -1,0 +1,2 @@
+
+# Initialize Django project package
