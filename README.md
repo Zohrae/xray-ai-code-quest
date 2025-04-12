@@ -1,73 +1,92 @@
-# Welcome to your Lovable project
 
-## Project info
+# Pneumonia X-Ray AI Detection
 
-**URL**: https://lovable.dev/projects/d83c5d3c-b7a3-4091-a97a-4c0a00f5987d
+This project is an AI-powered web application for detecting pneumonia from chest X-ray images. It was developed as part of a study to evaluate the capability of AI code generation tools (GitHub Copilot and Tabnine) to create functional and maintainable code for medical applications.
 
-## How can I edit this code?
+## Project Structure
 
-There are several ways of editing your application.
+The project follows a client-server architecture:
 
-**Use Lovable**
+```
+Pneumonia/
+├── frontend/      # React TypeScript application
+└── backend/       # Django REST API + TensorFlow model
+```
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/d83c5d3c-b7a3-4091-a97a-4c0a00f5987d) and start prompting.
+## Features
 
-Changes made via Lovable will be committed automatically to this repo.
+- Upload and preview chest X-ray images
+- AI-powered pneumonia detection with confidence scores
+- Visual heatmap highlighting potential pneumonia regions
+- History of previous scans
+- Educational information about pneumonia and the AI model
 
-**Use your preferred IDE**
+## Technical Stack
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Frontend
+- React with TypeScript
+- Tailwind CSS for styling
+- ShadCN UI component library
+- Lucide React for icons
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Backend
+- Django REST Framework
+- TensorFlow/Keras for the machine learning model
+- Chest X-ray dataset from Kaggle (Paul Mooney)
 
-Follow these steps:
+## Getting Started
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### Prerequisites
+- Node.js and npm
+- Python 3.8+
+- Pip
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### Installation
 
-# Step 3: Install the necessary dependencies.
-npm i
+1. Clone the repository:
+```
+git clone https://github.com/yourusername/pneumonia-detection.git
+cd pneumonia-detection
+```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+2. Set up the frontend:
+```
+cd frontend
+npm install
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+3. Set up the backend:
+```
+cd ../backend
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py runserver
+```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+4. Download the dataset:
+```python
+import kagglehub
+path = kagglehub.dataset_download("paultimothymooney/chest-xray-pneumonia")
+```
 
-**Use GitHub Codespaces**
+## Usage
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+1. Open your browser and navigate to `http://localhost:3000`
+2. Upload a chest X-ray image
+3. View the AI analysis results
 
-## What technologies are used for this project?
+## Ethical Considerations
 
-This project is built with:
+This application is intended for educational and research purposes only. It should not be used for actual medical diagnosis. Always consult with healthcare professionals for proper medical advice.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Acknowledgements
 
-## How can I deploy this project?
+- Dataset: "Chest X-Ray Images (Pneumonia)" by Paul Mooney on Kaggle
+- This project was created as part of a comparative study on AI code generation tools
 
-Simply open [Lovable](https://lovable.dev/projects/d83c5d3c-b7a3-4091-a97a-4c0a00f5987d) and click on Share -> Publish.
+## License
 
-## Can I connect a custom domain to my Lovable project?
-
-Yes it is!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+This project is licensed under the MIT License - see the LICENSE file for details.
