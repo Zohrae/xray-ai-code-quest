@@ -1,48 +1,63 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/hooks/use-toast";
 import UploadForm from '@/components/UploadForm';
 import ResultDisplay from '@/components/ResultDisplay';
 import InfoSection from '@/components/InfoSection';
 import RecentScans from '@/components/RecentScans';
 import { XRayResult } from '@/types/types';
 import { AlertCircle, FileCheck } from 'lucide-react';
+import { analyzeXRay, getRecentScans } from '@/services/api';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState<string>("upload");
   const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
   const [currentResult, setCurrentResult] = useState<XRayResult | null>(null);
   const [recentScans, setRecentScans] = useState<XRayResult[]>([]);
+  const { toast } = useToast();
+  
+  useEffect(() => {
+    // Load recent scans when component mounts
+    fetchRecentScans();
+  }, []);
+
+  const fetchRecentScans = async () => {
+    try {
+      const scans = await getRecentScans();
+      setRecentScans(scans);
+    } catch (error) {
+      console.error('Failed to fetch recent scans:', error);
+    }
+  };
   
   const handleFileAnalysis = async (file: File) => {
     setIsAnalyzing(true);
     
     try {
-      // Simulate API call to backend
-      // In a real implementation, you would send the image to your Django backend
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Simulate response
-      const isPneumonia = Math.random() > 0.5;
-      const confidence = 70 + Math.floor(Math.random() * 25);
-      
-      const result: XRayResult = {
-        id: Date.now().toString(),
-        fileName: file.name,
-        timestamp: new Date(),
-        isPneumonia: isPneumonia,
-        confidence: confidence,
-        imageUrl: URL.createObjectURL(file)
-      };
+      // Call the backend API to analyze the image
+      const result = await analyzeXRay(file);
       
       setCurrentResult(result);
-      setRecentScans(prev => [result, ...prev].slice(0, 5));
+      // Update the recent scans
+      fetchRecentScans();
       setActiveTab("results");
+      
+      toast({
+        title: result.isPneumonia ? "Pneumonia Detected" : "No Pneumonia Detected",
+        description: `Confidence: ${result.confidence.toFixed(2)}%`,
+        variant: result.isPneumonia ? "destructive" : "default",
+      });
     } catch (error) {
       console.error("Analysis failed:", error);
+      toast({
+        title: "Analysis Failed",
+        description: "Failed to analyze the X-ray image. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setIsAnalyzing(false);
     }
